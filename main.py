@@ -1,3 +1,7 @@
+"""Write the AI-agent joke to the configured make.fun output file.
+Read the file back to verify its exact contents after writing.
+"""
+
 import os
 from pathlib import Path
 
@@ -12,7 +16,9 @@ def main() -> None:
     assert 1 <= len(LINE) <= 200
     output_path = Path(os.environ.get("MAKEFUN_OUTPUT_DIR") or "/output") / "entry.txt"
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_bytes((LINE + "\n").encode("utf-8"))
+    expected_bytes = (LINE + "\n").encode("utf-8")
+    output_path.write_bytes(expected_bytes)
+    assert output_path.read_bytes() == expected_bytes, "output file bytes do not match the expected line"
 
 
 if __name__ == "__main__":
